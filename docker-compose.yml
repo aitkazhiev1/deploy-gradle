@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  app:
+    image: gradle:latest
+    container_name: deploy-gradle-app
+    build: .
+    restart: on-failure
+
+  nginx:
+    image: nginx:mainline
+    container_name: deploy-gradle-nginx
+    depends_on:
+      - app
+    ports:
+      - "8484:80"
+    volumes:
+      - ./deploy-gradle.conf:/etc/nginx/conf.d/deploy-gradle.conf
+    restart: on-failure
